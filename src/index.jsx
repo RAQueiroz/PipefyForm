@@ -8,6 +8,7 @@ import './template/custom.css'
 
 import promise from 'redux-promise';
 import logger from 'redux-logger';
+
 import reducers from './reducer';
 
 import Routes from './config/routes'
@@ -25,4 +26,5 @@ class App extends Component {
 }
 
 ReactDOM.render(<App/>, app)
+
 
