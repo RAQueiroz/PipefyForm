@@ -108,7 +108,7 @@ class TodoForm extends Component {
                     },
                     {
                         fieldId: "primary_skill",
-                        fieldValue: this.props.skill
+                        fieldValue: 'eee'
                     },
                     {
                         fieldId: "javascript_library_of_choice",
