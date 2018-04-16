@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Alert from 'react-s-alert';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DatePicker from 'react-datepicker';
@@ -8,7 +9,13 @@ import { graphql, compose } from 'react-apollo'
 import {ptBr} from 'moment/locale/pt-br';
 import {RadioGroup, Radio} from 'react-radio-group'
 import gql from 'graphql-tag'
-import { changeName, changeAddExperience, changeBio, changeJSLibrary, changeSkill, changeStartDate } from '../../actions/form';
+import { changeName,
+        changeAddExperience,
+        changeBio,
+        changeJSLibrary,
+        changeSkill,
+        changeStartDate
+     } from '../../actions/form';
 
 import Box from '../../components/Box'
 import Grid from '../../components/Grid'
@@ -59,24 +66,8 @@ const FormQuery = gql`
 `
 
 const sendForm = gql`
-    mutation {
-    submitPublicForm(input: {
-      formId: "1lf_E0x4",
-      filledFields: [
-        {
-            fieldId: "your_name",
-            fieldValue: 123
-        },
-        {
-            fieldId: "your_bio",
-            fieldValue: "Teste2"
-        },
-        {
-            fieldId: "primary_skill",
-            fieldValue: "Teste2"
-        }
-      ]
-    }) {
+    mutation sendform($input: SubmitPublicFormInput!){
+    submitPublicForm(input: $input) {
       repoItem {
         id
         title
@@ -95,25 +86,68 @@ class TodoForm extends Component {
         this.handleSave = this.handleSave.bind(this);
     }
 
-    componentWillReceiveProps(nextProps){
-        console.log(nextProps);
-    }
-
     handleSave(){
-        this.props.mutate({variables: {name:'diego'}})
-        .then((data) => {
-          console.log(data);
-        })
-        .catch((err) => {
-            console.log(JSON.parse(JSON.stringify(err)));
-        })
+        const { bio, name, skill, jsLibrary, startDate, addExperience } = this.props;
+        if( bio === '' || name === '' || skill === '' || jsLibrary === '' || startDate === '' || addExperience === '') {
+            Alert.error('Preencha todos os campos do formulário', {
+                position: 'top',
+                effect: 'scale',
+                timeout: 'none'
+            })
+        } else {
+            let input = {
+                formId: "1lf_E0x4",
+                filledFields: [
+                    {
+                        fieldId: "your_name",
+                        fieldValue: this.props.name
+                    },
+                    {
+                        fieldId: "your_bio",
+                        fieldValue: this.props.bio
+                    },
+                    {
+                        fieldId: "primary_skill",
+                        fieldValue: this.props.skill
+                    },
+                    {
+                        fieldId: "javascript_library_of_choice",
+                        fieldValue: this.props.jsLibrary
+                    },
+                    {
+                        fieldId: "additional_experience",
+                        fieldValue: this.props.addExperience
+                    },
+                    {
+                        fieldId: "start_date",
+                        fieldValue: this.props.startDate
+                    }
+                ]
+            }
+            this.props.mutate({variables: {input}})
+            .then((data) => {
+                Alert.success('Form enviado com sucesso', {
+                    position: 'top',
+                    effect: 'scale',
+                    timeout: 'none'
+                })
+            })
+            .catch((err) => {
+                let errResult = JSON.parse(JSON.stringify(err))
+                    Alert.error(err.message, {
+                        position: 'top',
+                        effect: 'scale',
+                        timeout: 'none'
+                    })
+
+            })
+        }
     }
 
     render(){
         if(this.props.data.publicForm){
-        const { bio, name, skill, jsLibrary, startDate } = this.props;
+        const { bio, name, skill, jsLibrary, startDate, addExperience } = this.props;
         const { publicForm } = this.props.data;
-        console.log(publicForm);
         return(
             <div className="row">
                 <Grid cols="12 12 4 4">
@@ -143,7 +177,6 @@ class TodoForm extends Component {
                         <div className="form-group">
                             <label for="bio"><Text>{publicForm.formFields[1].label}</Text></label>
                             <textarea
-                                type="password"
                                 className="form-control"
                                 id={publicForm.formFields[1].id}
                                 onChange={this.props.changeBio}
@@ -158,7 +191,7 @@ class TodoForm extends Component {
                                 value= { skill }
                                 onChange={this.props.changeSkill}
                             >
-                            {publicForm.formFields[2].options.map((option) => <option value="skill1">{option}</option>)}
+                            {publicForm.formFields[2].options.map((option) => <option value={option}>{option}</option>)}
                             </select>
                         </div>
                         <div className="form-group">
@@ -173,7 +206,7 @@ class TodoForm extends Component {
                         </div>
                         <div className="form-group">
                             <label><Text>{publicForm.formFields[4].label}</Text></label>
-                            {publicForm.formFields[4].options.map((option) =>  <p> <input type="checkbox" value={option}/>{option}</p>)}
+                            {publicForm.formFields[4].options.map((option) =>  <p> <input  onChange={this.props.changeAddExperience} type="checkbox" value={option}/>{option}</p>)}
                         </div>
                         <div className="form-group">
                             <label><Text>{publicForm.formFields[5].label}</Text></label>
@@ -204,8 +237,7 @@ const mapStateToProps = state => ({
     skill: state.form.skill,
     jsLibrary: state.form.jsLibrary,
     addExperience: state.form.addExperience,
-    startDate: state.form.startDate
-
+    startDate: state.form.startDate,
 })
 
 const mapDispatchToProps = dispatch =>

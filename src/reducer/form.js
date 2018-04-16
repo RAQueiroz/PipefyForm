@@ -1,11 +1,36 @@
-import { NAME_CHANGED, BIO_CHANGED, ADDTIONALLEXPERIENCE_CHANGED, JSLIBRARY_CHANGED, SKILL_CHANGED, STARTDATE_CHANGED } from '../actions/form'
+import { NAME_CHANGED,
+        BIO_CHANGED,
+        ADDTIONALLEXPERIENCE_CHANGED,
+        JSLIBRARY_CHANGED,
+        SKILL_CHANGED,
+        STARTDATE_CHANGED,
+    } from '../actions/form'
+import { addTypenameToDocument } from 'apollo-utilities';
 
 const INITIAL_STATE = {
     name:'',
     bio: '',
-    skill: '',
+    skill: 'Structured Programming',
     jsLibrary: '',
-    startDate: ''
+    startDate: '16/04/2018',
+    addExperience: []
+}
+
+const removeFromArr = (arr, item) => {
+    var index = arr.indexOf(item);
+    if (index > -1) {
+        arr.splice(index, 1);
+    }
+
+    return arr
+}
+
+const moreExperience = (experiences, newExperience) => {
+    let newArr = experiences;
+
+    !experiences.includes(newExperience) ? newArr.push(newExperience) : newArr = removeFromArr(newArr, newExperience)
+
+    return newArr
 }
 
 export default ( state = INITIAL_STATE, action) => {
@@ -35,6 +60,11 @@ export default ( state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 startDate: action.payload
+            }
+        case ADDTIONALLEXPERIENCE_CHANGED:
+            return {
+                ...state,
+                addExperience: moreExperience(state.addExperience, action.payload)
             }
         default:
              return state
