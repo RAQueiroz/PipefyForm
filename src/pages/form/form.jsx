@@ -165,9 +165,8 @@ class TodoForm extends Component {
                 <Grid cols="12 12 8 8">
                 <Box>
                 <div className="form-group">
-                            <label for="name"><Text>{publicForm.formFields[0].label}</Text></label>
+                            <label><Text>{publicForm.formFields[0].label}</Text></label>
                             <input
-                                type="name"
                                 className="form-control"
                                 id={publicForm.formFields[0].id}
                                 onChange={this.props.changeName}
@@ -175,7 +174,7 @@ class TodoForm extends Component {
                             />
                         </div>
                         <div className="form-group">
-                            <label for="bio"><Text>{publicForm.formFields[1].label}</Text></label>
+                            <label><Text>{publicForm.formFields[1].label}</Text></label>
                             <textarea
                                 className="form-control"
                                 id={publicForm.formFields[1].id}
@@ -184,14 +183,16 @@ class TodoForm extends Component {
                             />
                         </div>
                         <div className="form-group">
-                            <label for="skill"><Text>{publicForm.formFields[2].label}</Text></label>
+                            <label><Text>{publicForm.formFields[2].label}</Text></label>
                             <select
                                 id={publicForm.formFields[2].label}
                                 className="form-control"
                                 value= { skill }
                                 onChange={this.props.changeSkill}
                             >
-                            {publicForm.formFields[2].options.map((option) => <option value={option}>{option}</option>)}
+                            {publicForm.formFields[2].options.map((option) =>
+                                <option value={option}>{option}</option>
+                            )}
                             </select>
                         </div>
                         <div className="form-group">
@@ -201,12 +202,16 @@ class TodoForm extends Component {
                                 selectedValue={jsLibrary}
                                 onChange={this.props.changeJSLibrary}
                             >
-                                 {publicForm.formFields[3].options.map((option) =>  <p><Radio value={option}/>{option}</p>)}
+                                {publicForm.formFields[3].options.map((option) =>
+                                    <p><Radio value={option}/>{option}</p>
+                                )}
                             </RadioGroup>
                         </div>
                         <div className="form-group">
                             <label><Text>{publicForm.formFields[4].label}</Text></label>
-                            {publicForm.formFields[4].options.map((option) =>  <p> <input  onChange={this.props.changeAddExperience} type="checkbox" value={option}/>{option}</p>)}
+                            {publicForm.formFields[4].options.map((option) =>
+                                <p> <input  onChange={this.props.changeAddExperience} type="checkbox" value={option}/>{option}</p>
+                            )}
                         </div>
                         <div className="form-group">
                             <label><Text>{publicForm.formFields[5].label}</Text></label>
@@ -225,7 +230,7 @@ class TodoForm extends Component {
         )
         }else{
             return(
-                <p>Carregando</p>
+                <p>Carregando...</p>
             )
         }
     }

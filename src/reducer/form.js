@@ -1,3 +1,5 @@
+import moment from 'moment';
+import {ptBr} from 'moment/locale/pt-br';
 import { NAME_CHANGED,
         BIO_CHANGED,
         ADDTIONALLEXPERIENCE_CHANGED,
@@ -12,7 +14,7 @@ const INITIAL_STATE = {
     bio: '',
     skill: 'Structured Programming',
     jsLibrary: '',
-    startDate: '16/04/2018',
+    startDate: moment().format(),
     addExperience: []
 }
 
